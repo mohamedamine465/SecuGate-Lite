@@ -50,5 +50,30 @@ def normaliser_acces(ligne: str, numero: int, cible: str = "web-app") -> Signal:
         id=sig_id, timestamp=timestamp, source="ACCES", ip=ip, 
         cible=cible, type=type_sig, gravite=gravite, message=message
     )
+
 def normaliser_scan(rapport: dict, numero: int) -> Signal:
- raise NotImplementedError
+    cles_requises = {"rule", "component", "severity", "message", "date"}
+    if not cles_requises.issubset(rapport.keys()):
+        raise ValueError("Il manque une ou plusieurs clés dans le rapport de scan.")
+        
+    sig_id = f"SIG-{numero:05d}"
+    
+    # Détermination de la gravité
+    severite = rapport["severity"].lower()
+    if severite == "blocker":
+        gravite = "CRITIQUE"
+    elif severite == "critical":
+        gravite = "ELEVEE"
+    elif severite == "major":
+        gravite = "MOYENNE"
+    elif severite == "minor":
+        gravite = "FAIBLE"
+    else:
+        gravite = "FAIBLE"
+        
+    message = f"Faille {rapport['rule']} {rapport['message']}"
+    
+    return Signal(
+        id=sig_id, timestamp=rapport["date"], source="SCAN", ip="", 
+        cible=rapport["component"], type="FAILLE", gravite=gravite, message=message
+    )
