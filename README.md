@@ -22,4 +22,6 @@ secugate-lite/
  └── test_alerte.py (C)
 
 
+
 - imad ait lfard : agent Détection (B) et (C)
+- Elhouti Mohamed Amine: agent collecte (A)
