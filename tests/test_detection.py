@@ -24,9 +24,6 @@ class TestDetection(unittest.TestCase):
         acces = sig(type_="ACCES", ip="10.0.0.5")
         self.assertEqual(compter_echecs(acces, compteur), 0)
 
-if __name__ == "__main__":
-    unittest.main()
-
     def test_chercher_procedures(self):
         # On simule une base avec deux procédures
         base = {"login": "Bloquer IP", "faille": "Corriger système"}
@@ -59,4 +56,8 @@ if __name__ == "__main__":
         self.assertEqual(v.explication, "Bloquer IP")
         self.assertEqual(v.action, "Bloquer l'IP 192.168.1.15")
         self.assertTrue(v.sensible)
-        self.assertEqual(s.statut, "ANALYSE") # Le statut du signal doit changer
+        self.assertEqual(s.statut, "ANALYSE")
+
+# Ceci doit toujours rester à la TOUTE FIN du fichier, sans indentation
+if __name__ == "__main__":
+    unittest.main()
