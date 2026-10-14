@@ -20,3 +20,6 @@ secugate-lite/
  ├── test_collecte.py (A)
  ├── test_detection.py (B)
  └── test_alerte.py (C)
+
+
+imad ait lfard : agent Détection (B) et (C)
