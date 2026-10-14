@@ -16,6 +16,39 @@ def masquer_parametres(chemin: str) -> str:
     )
 
 def normaliser_acces(ligne: str, numero: int, cible: str = "web-app") -> Signal:
- raise NotImplementedError
+    champs = ligne.split()
+    if len(champs) < 6:
+        raise ValueError("La ligne doit contenir au moins 6 champs.")
+    
+    date, heure, ip, methode, chemin, statut = champs[:6]
+    
+    # Formatage de l'ID et du timestamp
+    sig_id = f"SIG-{numero:05d}"
+    timestamp = f"{date}T{heure}Z"
+    
+    # Détermination du type
+    chemin_base = chemin.split('?')[0]
+    if chemin_base == "/login" and statut in ["401", "403"]:
+        type_sig = "LOGIN_ECHEC"
+    else:
+        type_sig = "ACCES"
+        
+    # Détermination de la gravité
+    if statut.startswith('5'):
+        gravite = "ELEVEE"
+    elif statut.startswith('4'):
+        gravite = "MOYENNE"
+    else:
+        gravite = "FAIBLE"
+        
+    # Formatage du message
+    chemin_masque = masquer_parametres(chemin)
+    ip_masquee = masquer_ip(ip)
+    message = f"{methode} {chemin_masque} -> {statut} depuis {ip_masquee}"
+    
+    return Signal(
+        id=sig_id, timestamp=timestamp, source="ACCES", ip=ip, 
+        cible=cible, type=type_sig, gravite=gravite, message=message
+    )
 def normaliser_scan(rapport: dict, numero: int) -> Signal:
  raise NotImplementedError
